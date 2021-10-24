@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 const list = [
 	{
@@ -35,10 +35,26 @@ const list = [
 ];
 function Item({ name, url, price }) {
 	return (
-		<div>
-			{name}
-			<img src={url} width={50} height={50} alt='img' />
-			{price}
+		<div
+			style={{
+				display: 'flex',
+			}}
+		>
+			<img
+				src={url}
+				style={{ width: '70px', height: '70px' }}
+				alt='img'
+			/>
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					padding: '10px',
+				}}
+			>
+				<h5> {name}</h5>
+				<h5> MRP:₹{price}</h5>
+			</div>
 		</div>
 	);
 }
@@ -50,8 +66,9 @@ export default function Cart({ showCart, handleCloseCart, handleShowCart }) {
 			</Modal.Header>
 			<Modal.Body>
 				{list.map((p, id) => (
-					<Item key={id} {...id} />
+					<Item key={id} {...p} />
 				))}
+				<Button> Place Order</Button>
 			</Modal.Body>
 		</Modal>
 	);
