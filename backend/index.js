@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import setup from './src/setup.js';
 import {
 	login,
@@ -11,10 +12,11 @@ import {
 } from './src/index.js';
 
 setup();
-const port = 3000;
+const port = 8080;
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.post('/api/login', login);
 app.post('/api/signup', signup);

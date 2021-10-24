@@ -19,8 +19,8 @@ export default function ({ generateToken, decodeToken }) {
 			res.json({ msg: 'Internal Server Error' });
 		}
 		const token = generateToken({ username });
-		res.status(200);
 		res.cookie('auth', token);
+		res.status(200);
 		res.json({ msg: 'Successfull' });
 	}
 
