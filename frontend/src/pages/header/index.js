@@ -6,26 +6,9 @@ import './header.css';
 import { Form, FormControl } from 'react-bootstrap';
 import { Modal, Button } from 'react-bootstrap';
 import Cart from './cart';
-
-async function handleLogin({ username, password }) {
-	const result = await fetch('http://0.0.0.0:8080/api/login', {
-		method: 'POST',
-		headers: {
-			'Content-type': 'application/json',
-		},
-		body: JSON.stringify({ username, password }),
-	});
-	console.log(result);
-}
-function handleSignup({ username, password }) {
-	const result = fetch('http://0.0.0.0:8080/api/signup', {
-		method: 'POST',
-		body: JSON.stringify({ username, password }),
-	});
-	console.log(result);
-}
-
-function Header() {
+import { handleLogin, handleSignup } from '../../api/auth.js';
+import { handleGetCart } from '../../api/cart';
+function Header({ auth, setAuth }) {
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -35,6 +18,7 @@ function Header() {
 	const handleShowCart = () => setShowCart(true);
 
 	const [login, setLogin] = useState(true);
+	const [list, setList] = useState(null);
 	const [username, setUsername] = useState(null);
 	const [password, setPassword] = useState(null);
 	return (
@@ -111,9 +95,13 @@ function Header() {
 								<Button
 									style={{ padding: '5px', margin: '5px' }}
 									variant='primary'
-									onClick={() => {
+									onClick={async () => {
 										if (login) {
-											handleLogin({ username, password });
+											const token = await handleLogin({
+												username,
+												password,
+											});
+											setAuth(token);
 										} else {
 											handleSignup({
 												username,
@@ -139,6 +127,8 @@ function Header() {
 			</Modal>
 			<Cart
 				showCart={showCart}
+				token={auth}
+				list={list}
 				handleShowCart={handleShowCart}
 				handleCloseCart={handleCloseCart}
 			/>
@@ -219,7 +209,14 @@ function Header() {
 								<li className='nav-item'>
 									<div
 										className='nav-link header_location'
-										onClick={handleShowCart}
+										onClick={async () => {
+											const result = await handleGetCart({
+												auth,
+											});
+											console.log(result);
+											setList(result);
+											handleShowCart();
+										}}
 									>
 										<BiCart
 											style={{

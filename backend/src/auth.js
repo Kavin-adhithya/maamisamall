@@ -19,9 +19,9 @@ export default function ({ generateToken, decodeToken }) {
 			res.json({ msg: 'Internal Server Error' });
 		}
 		const token = generateToken({ username });
-		res.cookie('auth', token);
-		res.status(200);
-		res.json({ msg: 'Successfull' });
+		res.cookie('auth', token)
+			.status(200)
+			.json({ msg: 'Successfull', token });
 	}
 
 	async function signup(req, res) {
@@ -41,7 +41,8 @@ export default function ({ generateToken, decodeToken }) {
 	}
 
 	async function verify(req, res, next) {
-		const { auth: token } = req.cookies;
+		const token = req.cookies.auth ? req.cookies.auth : req.headers.auth;
+		console.log(token);
 		const { username, err } = decodeToken({ token });
 		if (err) {
 			res.status(400);

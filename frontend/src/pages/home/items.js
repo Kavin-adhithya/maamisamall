@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import './items.css';
-
+import { handleAddToCart } from '../../api/cart.js';
 const list = [
 	{
 		name: 'Chicken Curry Cut(small Pcs)',
@@ -35,7 +35,7 @@ const list = [
 	},
 ];
 
-function Item({ name, url, price }) {
+function Item({ name, url, price, auth }) {
 	return (
 		<div className='item'>
 			<img src={url} alt='item' />
@@ -52,18 +52,24 @@ function Item({ name, url, price }) {
 				}}
 			>
 				<p>MRP:₹{price}</p>
-				<Button variant='danger'> Add to cart </Button>
+				<Button
+					variant='danger'
+					onClick={() => handleAddToCart({ name, url, price, auth })}
+				>
+					{' '}
+					Add to cart{' '}
+				</Button>
 			</div>
 		</div>
 	);
 }
 
-export default function Items() {
+export default function Items({ auth }) {
 	return (
 		<div className='con'>
 			<div className='box'>
 				{list.map((p, id) => (
-					<Item key={id} {...p} />
+					<Item key={id} {...p} auth={auth} />
 				))}
 			</div>
 		</div>
